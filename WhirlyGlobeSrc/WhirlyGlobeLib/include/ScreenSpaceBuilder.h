@@ -26,7 +26,6 @@
 #import "DataLayer.h"
 #import "LayerThread.h"
 #import "TextureAtlas.h"
-#import "SelectionManager.h"
 #import "ScreenSpaceDrawable.h"
 #import "Scene.h"
 
@@ -34,6 +33,7 @@ namespace WhirlyKit
 {
     
 class ScreenSpaceObject;
+class ScreenSpaceObjectLocation;
     
 /** Screen space objects are used for both labels and markers.  This builder
     helps construct the drawables needed to represent them.
@@ -54,7 +54,8 @@ public:
         // Comparison operator for set
         bool operator < (const DrawableState &that) const;
         
-        SimpleIdentity texID;
+        std::vector<SimpleIdentity> texIDs;
+        double period;
         SimpleIdentity progID;
         NSTimeInterval fadeUp,fadeDown;
         int drawPriority;
@@ -66,6 +67,8 @@ public:
     
     /// Set the active texture ID
     void setTexID(SimpleIdentity texID);
+    /// Set the active texture IDs
+    void setTexIDs(const std::vector<SimpleIdentity> &texIDs,double period);
     /// Set the active program ID
     void setProgramID(SimpleIdentity progID);
     /// Set the fade in/out
@@ -154,7 +157,7 @@ public:
         ConvexGeometry();
         
         /// Texture ID used for just this object
-        SimpleIdentity texID;
+        std::vector<SimpleIdentity> texIDs;
         /// Program ID used to render this geometry
         SimpleIdentity progID;
         /// Color for the geometry
@@ -175,6 +178,7 @@ public:
     void setRotation(double rotation);
     void setFade(NSTimeInterval fadeUp,NSTimeInterval fadeDown);
     void setOffset(const Point2d &offset);
+    void setPeriod(NSTimeInterval period);
     
     void addGeometry(const ConvexGeometry &geom);
     
@@ -187,6 +191,24 @@ protected:
     bool keepUpright;
     ScreenSpaceBuilder::DrawableState state;
     std::vector<ConvexGeometry> geometry;
+};
+    
+/** We use the screen space object location to communicate where
+    a screen space object is on the screen.
+  */
+class ScreenSpaceObjectLocation
+{
+public:
+    ScreenSpaceObjectLocation();
+
+    // ID for selector
+    SimpleIdentity shapeID;
+    // Location of object in display space
+    Point3d dispLoc;
+    // Offset on the screen (presumably if it's been moved around during layout)
+    Point2d offset;
+    // Size of the object in screen space
+    std::vector<Point2d> pts;
 };
     
 }

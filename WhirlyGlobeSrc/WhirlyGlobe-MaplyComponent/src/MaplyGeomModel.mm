@@ -1,9 +1,9 @@
 /*
- *  WGScreenMarker.h
- *  WhirlyGlobeComponent
+ *  MaplyGeomModel.mm
+ *  WhirlyGlobe-MaplyComponent
  *
- *  Created by Steve Gifford on 7/21/12.
- *  Copyright 2011-2013 mousebird consulting
+ *  Created by Steve Gifford on 11/26/14.
+ *  Copyright 2011-2014 mousebird consulting
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -18,22 +18,35 @@
  *
  */
 
-#import "MaplyScreenMarker.h"
+#import "MaplyGeomModel.h"
+#import "WhirlyGlobe.h"
 
-@implementation MaplyScreenMarker
+using namespace WhirlyKit;
+using namespace Eigen;
 
-- (id)init
+@implementation MaplyGeomModel
+
+- (id)initWithObj:(NSString *)fullPath
 {
     self = [super init];
-    if (!self)
+    
+    const char *str = [fullPath cStringUsingEncoding:NSASCIIStringEncoding];
+    FILE *fp = fopen(str, "r");
+    if (!fp)
         return nil;
     
-    _selectable = true;
-    _offset = CGPointMake(0, 0);
-    _layoutSize = CGSizeMake(-1.0, -1.0);
-    _period = 5.0;
+    // Parse it out of the file
+    GeometryModelOBJ objModel;
+    if (!objModel.parse(fp))
+        return nil;
     
     return self;
 }
+
+
+
+@end
+
+@implementation MaplyGeomModelInstance
 
 @end

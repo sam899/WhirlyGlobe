@@ -63,6 +63,9 @@
 // Note: Not a great idea to be passing this in
 @property (nonatomic,weak) UIView * glView;
 
+// Offset for draw priorities on screen objects
+@property (nonatomic,assign) int screenObjectDrawPriorityOffset;
+
 // Initialize with the view we'll be using
 - (id)initWithView:(WhirlyKitView *)visualView;
 
@@ -95,6 +98,9 @@
 
 // Add shapes
 - (MaplyComponentObject *)addShapes:(NSArray *)shapes desc:(NSDictionary *)desc mode:(MaplyThreadMode)threadMode;
+
+// Add model instances
+- (MaplyComponentObject *)addModelInstances:(NSArray *)modelInstances desc:(NSDictionary *)desc mode:(MaplyThreadMode)threadMode;
 
 // Add stickers
 - (MaplyComponentObject *)addStickers:(NSArray *)stickers desc:(NSDictionary *)desc mode:(MaplyThreadMode)threadMode;
