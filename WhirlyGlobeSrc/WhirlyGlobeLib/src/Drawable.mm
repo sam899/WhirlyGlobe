@@ -1203,7 +1203,7 @@ NSData *BasicDrawable::asData(bool dupStart,bool dupEnd)
     return retData;
 }
     
-void BasicDrawable::asVertexAndElementData(NSMutableData **retVertData,NSMutableData **retElementData,int singleElementSize,const Point3d *center)
+void BasicDrawable::asVertexAndElementData(NSMutableData **retVertData,NSMutableData **retElementData,int singleElementSize,const Point3d *center,const Point3d *srcCenter)
 {
     *retVertData = nil;
     *retElementData = nil;
@@ -1221,6 +1221,14 @@ void BasicDrawable::asVertexAndElementData(NSMutableData **retVertData,NSMutable
         if (theseElements != 0 && theseElements != numElements)
             return;
     }
+    
+    bool adjCenterValid = false;
+    Point3d adjCenter;
+    if (center && srcCenter)
+    {
+        adjCenterValid = true;
+        adjCenter = *center - *srcCenter;
+    }
 
     // Build up the vertices
     vertexSize = singleVertexSize();
@@ -1228,7 +1236,7 @@ void BasicDrawable::asVertexAndElementData(NSMutableData **retVertData,NSMutable
     NSMutableData *vertData = [[NSMutableData alloc] initWithBytesNoCopy:(malloc(vertexSize * numVerts)) length:vertexSize*numVerts freeWhenDone:YES];
     unsigned char *basePtr = (unsigned char *)[vertData mutableBytes];
     for (unsigned int ii=0;ii<points.size();ii++,basePtr+=vertexSize)
-        addPointToBuffer(basePtr, ii, center);
+        addPointToBuffer(basePtr, ii, (adjCenterValid ? &adjCenter : NULL));
         
     // Build up the triangles
     int triSize = singleElementSize * 3;

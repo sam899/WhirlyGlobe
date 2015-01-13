@@ -56,7 +56,7 @@ using namespace WhirlyKit;
 	Point3d hit;
     Eigen::Matrix4d theTransform = [globeView calcFullMatrix];
     CGPoint touchLoc = [tap locationInView:tap.view];
-    if ([globeView pointOnSphereFromScreen:touchLoc transform:&theTransform frameSize:Point2f(sceneRenderer.framebufferWidth/glView.contentScaleFactor,sceneRenderer.framebufferHeight/glView.contentScaleFactor) hit:&hit normalized:true])
+    [globeView pointOnSphereFromScreen:touchLoc transform:&theTransform frameSize:Point2f(sceneRenderer.framebufferWidth/glView.contentScaleFactor,sceneRenderer.framebufferHeight/glView.contentScaleFactor) hit:&hit normalized:true];
     {
         double curH = globeView.heightAboveGlobe;
         double newH = curH * _zoomTapFactor;

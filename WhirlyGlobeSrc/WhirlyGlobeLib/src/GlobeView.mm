@@ -336,9 +336,20 @@ using namespace Eigen;
     
     // The rotation from where we are to where we tapped
     Eigen::Quaterniond endRot;
-    endRot = QuatFromTwoVectors(worldLoc,curUp);
-    Eigen::Quaterniond curRotQuat = _rotQuat;
-    Eigen::Quaterniond newRotQuat = curRotQuat * endRot;
+    Eigen::Quaterniond curRotQuat;
+    Eigen::Quaterniond newRotQuat;
+    if (worldLoc.dot(curUp) < 1e-10)
+    {
+        // Note: Have to do something different if we're rotating to the opposite point
+        Eigen::Quaterniond part1 = QuatFromTwoVectors(worldLoc, Point3d(0,0,1));
+        Eigen::Quaterniond part2 = QuatFromTwoVectors(Point3d(0,0,1), curUp);
+        curRotQuat = _rotQuat;
+        newRotQuat = curRotQuat * (part1 * part2);
+    } else {
+        endRot = QuatFromTwoVectors(worldLoc,curUp);
+        curRotQuat = _rotQuat;
+        newRotQuat = curRotQuat * endRot;
+    }
     
     if (northUp)
     {

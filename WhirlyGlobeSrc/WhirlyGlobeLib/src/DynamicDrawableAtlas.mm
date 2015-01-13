@@ -87,7 +87,7 @@ bool DynamicDrawableAtlas::addDrawable(BasicDrawable *draw,ChangeSet &changes,bo
     // If there's no center, we can calculate this data once
     if (!center)
     {
-        draw->asVertexAndElementData(&vertData,&elementData,singleElementSize,NULL);
+        draw->asVertexAndElementData(&vertData,&elementData,singleElementSize,NULL,NULL);
         if (!vertData || !elementData)
             return false;
     }
@@ -103,7 +103,7 @@ bool DynamicDrawableAtlas::addDrawable(BasicDrawable *draw,ChangeSet &changes,bo
         {
             // If there is a center, it's dependent on the big drawable's center
             if (!vertData)
-                draw->asVertexAndElementData(&vertData,&elementData,singleElementSize,bigDrawInfo.bigDraw->getCenter());
+                draw->asVertexAndElementData(&vertData,&elementData,singleElementSize,bigDrawInfo.bigDraw->getCenter(),center);
             if (!vertData || !elementData)
                 return false;
 
@@ -149,7 +149,7 @@ bool DynamicDrawableAtlas::addDrawable(BasicDrawable *draw,ChangeSet &changes,bo
         // If there's a center, the data is dependent on that center.
         // Note: We're creating this twice in some rare cases, which is annoying
         if (!vertData)
-            draw->asVertexAndElementData(&vertData,&elementData,singleElementSize,newBigDraw->getCenter());
+            draw->asVertexAndElementData(&vertData,&elementData,singleElementSize,NULL,NULL);
         if (!vertData || !elementData)
             return false;
         if ((represent.elementChunkId = newBigDraw->addRegion(vertData, represent.vertexPos, elementData,enabled)) != EmptyIdentity)

@@ -76,7 +76,7 @@ bool BigDrawable::isCompatible(BasicDrawable *draw,const Point3d *drawCenter,dou
                 double dist = (*drawCenter - center).norm();
                 double testVal = dist/objSize;
                 
-                if (testVal < 10e2)
+                if (testVal < 1e2)
                     return true;
                 else
                     return false;

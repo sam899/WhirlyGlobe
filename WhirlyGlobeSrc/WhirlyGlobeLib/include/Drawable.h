@@ -550,7 +550,7 @@ public:
     virtual NSData *asData(bool dupStart,bool dupEnd);
     
     /// Copy vertex and element data into appropriate NSData objects
-    virtual void asVertexAndElementData(NSMutableData **retVertData,NSMutableData **retElementData,int singleElementSize,const Point3d *center);
+    virtual void asVertexAndElementData(NSMutableData **retVertData,NSMutableData **retElementData,int singleElementSize,const Point3d *center,const Point3d *srcCenter);
     
     /// Assuming this is a set of triangles, convert to a triangle strip
 //    virtual void convertToTriStrip();
