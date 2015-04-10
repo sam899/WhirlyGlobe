@@ -95,11 +95,6 @@
 		2BB54EEA17CFABDF0065451F /* MaplyElevationSource.h in Headers */ = {isa = PBXBuildFile; fileRef = 2BB54EE917CFABDF0065451F /* MaplyElevationSource.h */; };
 		2BB54EED17CFABEA0065451F /* MaplyElevationSource.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2BB54EEC17CFABEA0065451F /* MaplyElevationSource.mm */; };
 		2BB54EEF17CFB8040065451F /* MaplyElevationSource_private.h in Headers */ = {isa = PBXBuildFile; fileRef = 2BB54EEE17CFB8030065451F /* MaplyElevationSource_private.h */; };
-		2BB752501AD84B2300FCA174 /* FMDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 2BC0FB8D196DC02A0043E1FD /* FMDatabase.m */; };
-		2BB752521AD84B2500FCA174 /* FMDatabaseAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 2BC0FB8F196DC02A0043E1FD /* FMDatabaseAdditions.m */; };
-		2BB752531AD84B2F00FCA174 /* FMDatabasePool.m in Sources */ = {isa = PBXBuildFile; fileRef = 2BC0FB91196DC02A0043E1FD /* FMDatabasePool.m */; };
-		2BB752541AD84B2F00FCA174 /* FMDatabaseQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 2BC0FB93196DC02A0043E1FD /* FMDatabaseQueue.m */; };
-		2BB752551AD84B3200FCA174 /* FMResultSet.m in Sources */ = {isa = PBXBuildFile; fileRef = 2BC0FB96196DC02A0043E1FD /* FMResultSet.m */; };
 		2BB752561AD84BDF00FCA174 /* MapboxMultiSourceTileInfo.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2B447F211A9BF09700E50C3C /* MapboxMultiSourceTileInfo.mm */; };
 		2BB752571AD84C2700FCA174 /* MapboxVectorStyleSet.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2B5F19141A92FBD6004A8723 /* MapboxVectorStyleSet.mm */; };
 		2BB752581AD84C2700FCA174 /* MapboxVectorStyleBackground.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2B5F192C1A93B2C0004A8723 /* MapboxVectorStyleBackground.mm */; };
@@ -1432,7 +1427,6 @@
 				2BB752591AD84C2700FCA174 /* MapboxVectorStyleFill.mm in Sources */,
 				2BB752851AD84D3100FCA174 /* once.cc in Sources */,
 				2BDC8A1B191D994F00DFECF0 /* AFHTTPSessionManager.m in Sources */,
-				2BB752501AD84B2300FCA174 /* FMDatabase.m in Sources */,
 				2B897A8915BC664A00250F23 /* MaplyCoordinate.mm in Sources */,
 				2B73BD4419F07B7F00CDB242 /* MaplyMatrix.mm in Sources */,
 				2BB752811AD84D2100FCA174 /* zero_copy_stream_impl_lite.cc in Sources */,
@@ -1450,7 +1444,6 @@
 				2BB752861AD84D3100FCA174 /* stringprintf.cc in Sources */,
 				2BB752691AD84D0F00FCA174 /* arenastring.cc in Sources */,
 				2BB7526A1AD84D0F00FCA174 /* descriptor.cc in Sources */,
-				2BB752531AD84B2F00FCA174 /* FMDatabasePool.m in Sources */,
 				2B897A8F15BC6C7B00250F23 /* PanDelegateFixed.mm in Sources */,
 				2B897A9115BC6CEE00250F23 /* MaplyViewControllerLayer.mm in Sources */,
 				2BB752621AD84C3900FCA174 /* MaplyVectorLineStyle.mm in Sources */,
@@ -1503,7 +1496,6 @@
 				2B0A4DB8167BDAD3000D5786 /* MaplyBaseInteractionLayer.mm in Sources */,
 				2BB752641AD84C3900FCA174 /* MaplyVectorPolygonStyle.mm in Sources */,
 				2B0A4DB9167BDAD3000D5786 /* MaplyBaseViewController.mm in Sources */,
-				2BB752521AD84B2500FCA174 /* FMDatabaseAdditions.m in Sources */,
 				2B37059E16B1E6110096C970 /* MaplySphericalQuadEarthWithTexGroup.mm in Sources */,
 				2BB7FB5316B9AD0D0017EB2F /* MaplyLight.m in Sources */,
 				2B2E2FFC16C4886800CAD143 /* MaplyShader.mm in Sources */,
@@ -1518,9 +1510,7 @@
 				2BB752781AD84D1800FCA174 /* unknown_field_set.cc in Sources */,
 				2BCA68A41741957700696BA8 /* MaplyQuadImageTilesLayer.mm in Sources */,
 				2B44E81C174B20C700474C2B /* MaplyQuadPagingLayer.mm in Sources */,
-				2BB752551AD84B3200FCA174 /* FMResultSet.m in Sources */,
 				2BB752581AD84C2700FCA174 /* MapboxVectorStyleBackground.mm in Sources */,
-				2BB752541AD84B2F00FCA174 /* FMDatabaseQueue.m in Sources */,
 				2B0D62D317A1D9BB00C3298D /* MaplyWMSTileSource.mm in Sources */,
 				2BB752571AD84C2700FCA174 /* MapboxVectorStyleSet.mm in Sources */,
 				2B789F7C185B92000028E027 /* MaplyAnnotation.mm in Sources */,
