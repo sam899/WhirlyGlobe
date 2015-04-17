@@ -1,8 +1,8 @@
 /*
- *  WGScreenMarker.h
- *  WhirlyGlobeComponent
+ *  MaplyUpdateLayer_private.h
+ *  WhirlyGlobe-MaplyComponent
  *
- *  Created by Steve Gifford on 7/21/12.
+ *  Created by Steve Gifford on 4/13/15.
  *  Copyright 2011-2015 mousebird consulting
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,25 +18,9 @@
  *
  */
 
-#import "MaplyScreenMarker.h"
+#import "MaplyUpdateLayer.h"
+#import <WhirlyGlobe.h>
 
-@implementation MaplyScreenMarker
-
-- (id)init
-{
-    self = [super init];
-    if (!self)
-        return nil;
-    
-    _selectable = true;
-    _offset = CGPointMake(0, 0);
-    _layoutSize = CGSizeMake(-1.0, -1.0);
-    _period = 0.0;
-    
-    return self;
-}
-
-@end
-
-@implementation MaplyMovingScreenMarker
+@interface MaplyViewerState()
+@property (nonatomic,strong) WhirlyKitViewState *viewState;
 @end
