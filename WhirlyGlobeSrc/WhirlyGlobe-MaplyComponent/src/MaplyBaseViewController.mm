@@ -178,18 +178,18 @@ using namespace WhirlyKit;
     
     _screenObjectDrawPriorityOffset = 1000000;
     
-    // Need this logic here to pull in the categories
-    static bool dummyInit = false;
-    if (!dummyInit)
-    {
-        NSDataDummyFunc();
-        NSDictionaryStyleDummyFunc();
-        DDXMLElementDummyFunc();
-        DDXMLDummyFunc();
-        
-        dummyInit = true;
-    }
-    
+//    // Need this logic here to pull in the categories
+//    static bool dummyInit = false;
+//    if (!dummyInit)
+//    {
+//        NSDataDummyFunc();
+//        NSDictionaryStyleDummyFunc();
+//        DDXMLElementDummyFunc();
+//        DDXMLDummyFunc();
+//        
+//        dummyInit = true;
+//    }
+
     userLayers = [NSMutableArray array];
     _threadPerLayer = true;
     
