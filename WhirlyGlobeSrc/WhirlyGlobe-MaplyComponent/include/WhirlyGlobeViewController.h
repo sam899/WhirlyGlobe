@@ -185,6 +185,14 @@
   */
 - (void)globeViewController:(WhirlyGlobeViewController *)viewC didMove:(MaplyCoordinate *)corners;
 
+
+/** @brief Called when an annotation is tapped
+    @details This is called when the a marker annotation is tapped.
+    @param viewC The globe view controller.
+    @param annotation The MaplyAnnotation that was tapped
+ */
+- (void)globeViewController:(WhirlyGlobeViewController *)viewC didTapAnnotation:(MaplyAnnotation *)annotation;
+
 @end
 
 /** @brief This view controller implements a 3D interactive globe.
