@@ -55,13 +55,13 @@ using namespace WhirlyKit;
 {
     if (!scene)
         return;
-    
+
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-    
+
     [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(periodicPerfOutput) object:nil];
 
     [glView stopAnimation];
-    
+
     EAGLContext *oldContext = [EAGLContext currentContext];
     [sceneRenderer useContext];
     for (MaplyShader *shader in shaders)
@@ -69,7 +69,7 @@ using namespace WhirlyKit;
     if (oldContext)
         [EAGLContext setCurrentContext:oldContext];
     sceneRenderer.scene = nil;
-    
+
     if (baseLayerThread)
     {
         // Kill off all the other layers first
@@ -87,7 +87,7 @@ using namespace WhirlyKit;
         [baseLayerThread cancel];
     }
     layerThreads = nil;
-    
+
     scene = NULL;
     visualView = nil;
 
@@ -96,11 +96,11 @@ using namespace WhirlyKit;
     baseLayerThread = nil;
     layoutLayer = nil;
     partSysLayer = nil;
-    
+
     activeObjects = nil;
-    
+
     interactLayer = nil;
-    
+
     while ([userLayers count] > 0)
     {
         MaplyViewControllerLayer *layer = [userLayers objectAtIndex:0];
@@ -110,7 +110,7 @@ using namespace WhirlyKit;
 
     viewTrackers = nil;
     annotations = nil;
-    
+
     theClearColor = nil;
 }
 
@@ -142,7 +142,7 @@ using namespace WhirlyKit;
 {
     if (![sceneRenderer isKindOfClass:[WhirlyKitSceneRendererES2 class]])
         return;
-    
+
     [self resetLights];
 }
 
@@ -156,24 +156,24 @@ using namespace WhirlyKit;
 - (void) loadSetup
 {
     allowRepositionForAnnnotations = true;
-    
+
     _screenObjectDrawPriorityOffset = 1000000;
-    
-    // Need this logic here to pull in the categories
-    static bool dummyInit = false;
-    if (!dummyInit)
-    {
-        NSDataDummyFunc();
-        NSDictionaryStyleDummyFunc();
-        DDXMLElementDummyFunc();
-        DDXMLDummyFunc();
-        
-        dummyInit = true;
-    }
-    
+
+    // // Need this logic here to pull in the categories
+    // static bool dummyInit = false;
+    // if (!dummyInit)
+    // {
+    //     NSDataDummyFunc();
+    //     NSDictionaryStyleDummyFunc();
+    //     DDXMLElementDummyFunc();
+    //     DDXMLDummyFunc();
+    //
+    //     dummyInit = true;
+    // }
+
     userLayers = [NSMutableArray array];
     _threadPerLayer = true;
-    
+
     [self loadSetup_glView];
 
 	// Set up the OpenGL ES renderer
@@ -196,50 +196,50 @@ using namespace WhirlyKit;
 	self.view.autoresizesSubviews = YES;
 	glView.frame = self.view.bounds;
     glView.backgroundColor = [UIColor blackColor];
-    
+
     // Turn on the model matrix optimization for drawing
     sceneRenderer.useViewChanged = true;
-    
+
 	// Need an empty scene and view
     visualView = [self loadSetup_view];
     scene = [self loadSetup_scene];
     sceneRenderer.scene = scene;
     [self loadSetup_lighting];
-    
+
     layerThreads = [NSMutableArray array];
-    
+
     // Need a layer thread to manage the layers
 	baseLayerThread = [[WhirlyKitLayerThread alloc] initWithScene:scene view:visualView renderer:sceneRenderer mainLayerThread:true];
     [layerThreads addObject:baseLayerThread];
-    
+
     // Layout still needs a layer to kick it off
     layoutLayer = [[WhirlyKitLayoutLayer alloc] initWithRenderer:sceneRenderer];
     [baseLayerThread addLayer:layoutLayer];
-    
+
     // Particle systems need a layer for cleanup
     partSysLayer = [[WhirlyKitParticleSystemLayer alloc] init];
     [baseLayerThread addLayer:partSysLayer];
-    
+
     // Lastly, an interaction layer of our own
     interactLayer = [self loadSetup_interactionLayer];
     interactLayer.screenObjectDrawPriorityOffset = _screenObjectDrawPriorityOffset;
     interactLayer.glView = glView;
     [baseLayerThread addLayer:interactLayer];
-    
+
 	// Give the renderer what it needs
 	sceneRenderer.theView = visualView;
-	    
+
     viewTrackers = [NSMutableArray array];
     annotations = [NSMutableArray array];
-	
+
 	// Kick off the layer thread
 	// This will start loading things
 	[baseLayerThread start];
-    
+
     // Set up defaults for the hints
     NSDictionary *newHints = [NSDictionary dictionary];
     [self setHints:newHints];
-        
+
     _selection = true;
 
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -267,14 +267,14 @@ using namespace WhirlyKit;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
+
     [self loadSetup];
 }
 
 - (void)viewDidUnload
 {
 	[self clear];
-	
+
 	[super viewDidUnload];
 }
 
@@ -291,10 +291,10 @@ using namespace WhirlyKit;
 - (void)shutdown
 {
     [interactLayer lockingShutdown];
-    
+
     if (glView)
         [glView shutdown];
-    
+
     [self clear];
 }
 
@@ -328,7 +328,7 @@ using namespace WhirlyKit;
 - (void)viewWillAppear:(BOOL)animated
 {
 	[self startAnimation];
-	
+
 	[super viewWillAppear:animated];
 }
 
@@ -347,7 +347,7 @@ using namespace WhirlyKit;
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
-    
+
     if (scene)
     {
         WhirlyKit::OpenGLMemManager *memManager = scene->getMemManager();
@@ -359,7 +359,7 @@ using namespace WhirlyKit;
 
             memManager->clearBufferIDs();
             memManager->clearTextureIDs();
-            
+
             if (oldContext)
                 [EAGLContext setCurrentContext:oldContext];
         }
@@ -378,7 +378,7 @@ static const float PerfOutputDelay = 15.0;
 {
     if (_performanceOutput == performanceOutput)
         return;
-    
+
     _performanceOutput = performanceOutput;
     if (_performanceOutput)
     {
@@ -395,10 +395,10 @@ static const float PerfOutputDelay = 15.0;
 {
     if (!scene)
         return;
-    
+
     scene->dumpStats();
-    
-    [self performSelector:@selector(periodicPerfOutput) withObject:nil afterDelay:PerfOutputDelay];    
+
+    [self performSelector:@selector(periodicPerfOutput) withObject:nil afterDelay:PerfOutputDelay];
 }
 
 - (bool)performanceOutput
@@ -442,7 +442,7 @@ static const float PerfOutputDelay = 15.0;
     int lightingRegular = true;
     if ([lightingType respondsToSelector:@selector(compare:)])
         lightingRegular = [lightingType compare:@"none"];
-    
+
     // Regular lighting is on by default
     if (!lightingRegular)
     {
@@ -478,13 +478,13 @@ static const float PerfOutputDelay = 15.0;
 {
     if (!shader)
         return;
-    
+
     if (!shaders)
         shaders = [NSMutableArray array];
 
     if (![shaders containsObject:shader])
         [shaders addObject:shader];
-    
+
     std::string theSceneName = [sceneName cStringUsingEncoding:NSASCIIStringEncoding];
     scene->addProgram(theSceneName, shader.program);
 }
@@ -494,7 +494,7 @@ static const float PerfOutputDelay = 15.0;
     for (MaplyShader *shader in shaders)
         if (![shader.name compare:name])
             return shader;
-    
+
     return nil;
 }
 
@@ -505,10 +505,10 @@ static const float PerfOutputDelay = 15.0;
 {
     if (!addDict)
         return baseDict;
-    
+
     NSMutableDictionary *newDict = [NSMutableDictionary dictionaryWithDictionary:baseDict];
     [newDict addEntriesFromDictionary:addDict];
-    
+
     // Now look for NSNulls, which we use to remove things
     NSArray *keys = [newDict allKeys];
     for (NSString *key in keys)
@@ -517,7 +517,7 @@ static const float PerfOutputDelay = 15.0;
         if (obj && [obj isKindOfClass:[NSNull class]])
             [newDict removeObjectForKey:key];
     }
-    
+
     return newDict;
 }
 
@@ -525,7 +525,7 @@ static const float PerfOutputDelay = 15.0;
 - (void)setHints:(NSDictionary *)changeDict
 {
     hints = [self mergeAndCheck:hints changeDict:changeDict];
-    
+
     // Settings we store in the hints
     BOOL zBuffer = [hints boolForKey:kWGRenderHintZBuffer default:false];
     sceneRenderer.zBufferMode = (zBuffer ? zBufferOn : zBufferOffDefault);
@@ -539,11 +539,11 @@ static const float PerfOutputDelay = 15.0;
 {
     if (![interactLayer startOfWork])
         return nil;
-    
+
     MaplyComponentObject *compObj = [interactLayer addScreenMarkers:markers desc:desc mode:threadMode];
-    
+
     [interactLayer endOfWork];
-    
+
     return compObj;
 }
 
@@ -556,11 +556,11 @@ static const float PerfOutputDelay = 15.0;
 {
     if (![interactLayer startOfWork])
         return nil;
-    
+
     MaplyComponentObject *compObj = [interactLayer addMarkers:markers desc:desc mode:threadMode];
-    
+
     [interactLayer endOfWork];
-    
+
     return compObj;
 }
 
@@ -573,11 +573,11 @@ static const float PerfOutputDelay = 15.0;
 {
     if (![interactLayer startOfWork])
         return nil;
-    
+
     MaplyComponentObject *compObj = [interactLayer addScreenLabels:labels desc:desc mode:threadMode];
 
     [interactLayer endOfWork];
-    
+
     return compObj;
 }
 
@@ -590,11 +590,11 @@ static const float PerfOutputDelay = 15.0;
 {
     if (![interactLayer startOfWork])
         return nil;
-    
+
     MaplyComponentObject *compObj = [interactLayer addLabels:labels desc:desc mode:threadMode];
-    
+
     [interactLayer endOfWork];
-    
+
     return compObj;
 }
 
@@ -607,11 +607,11 @@ static const float PerfOutputDelay = 15.0;
 {
     if (![interactLayer startOfWork])
         return nil;
-    
+
     MaplyComponentObject *compObj = [interactLayer addVectors:vectors desc:desc mode:threadMode];
-    
+
     [interactLayer endOfWork];
-    
+
     return compObj;
 }
 
@@ -624,11 +624,11 @@ static const float PerfOutputDelay = 15.0;
 {
     if (![interactLayer startOfWork])
         return nil;
-    
+
     MaplyComponentObject *compObj = [interactLayer instanceVectors:baseObj desc:desc mode:threadMode];
-    
+
     [interactLayer endOfWork];
-    
+
     return compObj;
 }
 
@@ -636,11 +636,11 @@ static const float PerfOutputDelay = 15.0;
 {
     if (![interactLayer startOfWork])
         return nil;
-    
+
     MaplyComponentObject *compObj = [interactLayer addWideVectors:vectors desc:desc mode:threadMode];
-    
+
     [interactLayer endOfWork];
-    
+
     return compObj;
 }
 
@@ -654,11 +654,11 @@ static const float PerfOutputDelay = 15.0;
 {
     if (![interactLayer startOfWork])
         return nil;
-    
+
     MaplyComponentObject *compObj = [interactLayer addBillboards:billboards desc:desc mode:threadMode];
-    
+
     [interactLayer endOfWork];
-    
+
     return compObj;
 }
 
@@ -666,11 +666,11 @@ static const float PerfOutputDelay = 15.0;
 {
     if (![interactLayer startOfWork])
         return nil;
-    
+
     MaplyComponentObject *compObj = [interactLayer addParticleSystem:partSys desc:desc mode:threadMode];
-    
+
     [interactLayer endOfWork];
-    
+
     return compObj;
 }
 
@@ -678,10 +678,10 @@ static const float PerfOutputDelay = 15.0;
 {
     if (![batch isValid])
         return;
-    
+
     if (![interactLayer startOfWork])
         return;
-    
+
     [interactLayer addParticleBatch:batch mode:threadMode];
 
     [interactLayer endOfWork];
@@ -691,10 +691,10 @@ static const float PerfOutputDelay = 15.0;
 {
     if (![interactLayer startOfWork])
         return nil;
-    
+
     MaplyComponentObject *compObj = [interactLayer addSelectionVectors:vectors desc:nil];
     [interactLayer endOfWork];
-    
+
     return compObj;
 }
 
@@ -702,9 +702,9 @@ static const float PerfOutputDelay = 15.0;
 {
     if (![interactLayer startOfWork])
         return;
-    
+
     [interactLayer changeVectors:compObj desc:desc mode:threadMode];
-    
+
     [interactLayer endOfWork];
 }
 
@@ -717,11 +717,11 @@ static const float PerfOutputDelay = 15.0;
 {
     if (![interactLayer startOfWork])
         return nil;
-    
+
     MaplyComponentObject *compObj = [interactLayer addShapes:shapes desc:desc mode:threadMode];
 
     [interactLayer endOfWork];
-    
+
     return compObj;
 }
 
@@ -734,11 +734,11 @@ static const float PerfOutputDelay = 15.0;
 {
     if (![interactLayer startOfWork])
         return nil;
-    
+
     MaplyComponentObject *compObj = [interactLayer addModelInstances:modelInstances desc:desc mode:threadMode];
 
     [interactLayer endOfWork];
-    
+
     return compObj;
 }
 
@@ -746,11 +746,11 @@ static const float PerfOutputDelay = 15.0;
 {
     if (![interactLayer startOfWork])
         return nil;
-    
+
     MaplyComponentObject *compObj = [interactLayer addGeometry:geom desc:desc mode:threadMode];
 
     [interactLayer endOfWork];
-    
+
     return compObj;
 }
 
@@ -758,11 +758,11 @@ static const float PerfOutputDelay = 15.0;
 {
     if (![interactLayer startOfWork])
         return nil;
-    
+
     MaplyComponentObject *compObj = [interactLayer addStickers:stickers desc:desc mode:threadMode];
 
     [interactLayer endOfWork];
-    
+
     return compObj;
 }
 
@@ -775,7 +775,7 @@ static const float PerfOutputDelay = 15.0;
 {
     if (![interactLayer startOfWork])
         return;
-    
+
     [interactLayer changeSticker:compObj desc:desc mode:threadMode];
 
     [interactLayer endOfWork];
@@ -785,10 +785,10 @@ static const float PerfOutputDelay = 15.0;
 {
     if (![interactLayer startOfWork])
         return nil;
-    
+
     MaplyComponentObject *compObj = [interactLayer addLoftedPolys:polys desc:desc key:key cache:cacheDb mode:threadMode];
     [interactLayer endOfWork];
-    
+
     return compObj;
 }
 
@@ -807,12 +807,12 @@ static const float PerfOutputDelay = 15.0;
     {
         [viewTrackers addObject:viewTrack];
     }
-    
+
     // Hook it into the renderer
     ViewPlacementGenerator *vpGen = scene->getViewPlacementGenerator();
     vpGen->addView(GeoCoord(viewTrack.loc.x,viewTrack.loc.y),viewTrack.view,viewTrack.minVis,viewTrack.maxVis);
     sceneRenderer.triggerDraw = true;
-    
+
     // And add it to the view hierarchy
     // Can only do this on the main thread anyway
     if ([viewTrack.view superview] == nil)
@@ -840,7 +840,7 @@ static const float PerfOutputDelay = 15.0;
                 theTracker = viewTrack;
                 break;
             }
-        
+
         if (theTracker)
         {
             [viewTrackers removeObject:theTracker];
@@ -869,7 +869,7 @@ static const float PerfOutputDelay = 15.0;
 {
     // See if we're already representing the annotation
     bool alreadyHere = [annotations containsObject:annotate];
-    
+
     // Let's put it in the right place so the callout can do its layout logic
     CGPoint pt = [self screenPointFromGeo:coord];
     CGRect rect = CGRectMake(pt.x+offset.x, pt.y+offset.y, 0.0, 0.0);
@@ -883,7 +883,7 @@ static const float PerfOutputDelay = 15.0;
         annotate.calloutView.delegate = nil;
         [annotate.calloutView presentCalloutFromRect:rect inView:glView constrainedToView:glView animated:NO];
     }
-    
+
     // But then we move it back because we're controlling its positioning
     CGRect frame = annotate.calloutView.frame;
     annotate.calloutView.frame = CGRectMake(frame.origin.x-pt.x+offset.x, frame.origin.y-pt.y+offset.y, frame.size.width, frame.size.height);
@@ -904,7 +904,7 @@ static const float PerfOutputDelay = 15.0;
 - (NSTimeInterval)calloutView:(SMCalloutView *)calloutView delayForRepositionWithSize:(CGSize)offset
 {
     NSTimeInterval delay = 0.0;
-    
+
     // Need to find the annotation this belongs to
     for (MaplyAnnotation *annotation in annotations)
     {
@@ -918,7 +918,7 @@ static const float PerfOutputDelay = 15.0;
             break;
         }
     }
-    
+
     return 0.0;
 }
 
@@ -926,9 +926,9 @@ static const float PerfOutputDelay = 15.0;
 {
     ViewPlacementGenerator *vpGen = scene->getViewPlacementGenerator();
     vpGen->removeView(annotate.calloutView);
-    
+
     [annotations removeObject:annotate];
-    
+
     [annotate.calloutView dismissCalloutAnimated:YES];
 }
 
@@ -977,12 +977,12 @@ static const float PerfOutputDelay = 15.0;
 {
     if (![interactLayer startOfWork])
         return nil;
-    
+
     MaplyTexture *maplyTex = [interactLayer addTexture:image desc:desc mode:threadMode];
     maplyTex.viewC = self;
-    
+
     [interactLayer endOfWork];
-    
+
     return maplyTex;
 }
 
@@ -990,7 +990,7 @@ static const float PerfOutputDelay = 15.0;
 {
     if (![interactLayer startOfWork])
         return;
-    
+
     [interactLayer removeTextures:@[texture] mode:threadMode];
 
     [interactLayer endOfWork];
@@ -1000,7 +1000,7 @@ static const float PerfOutputDelay = 15.0;
 {
     if (![interactLayer startOfWork])
         return;
-    
+
     [interactLayer removeTextures:textures mode:threadMode];
 
     [interactLayer endOfWork];
@@ -1011,7 +1011,7 @@ static const float PerfOutputDelay = 15.0;
     MaplyTexture *maplyTex = [self addTextureToAtlas:image imageFormat:MaplyImageIntRGBA wrapFlags:0 mode:threadMode];
     if (maplyTex)
         maplyTex.viewC = self;
-    
+
     return maplyTex;
 }
 
@@ -1045,7 +1045,7 @@ static const float PerfOutputDelay = 15.0;
 
     if (![interactLayer startOfWork])
         return;
-    
+
     [interactLayer removeObjects:[NSArray arrayWithArray:theObjs] mode:threadMode];
 
     [interactLayer endOfWork];
@@ -1055,7 +1055,7 @@ static const float PerfOutputDelay = 15.0;
 {
     if (!theObjs)
         return;
-    
+
     [self removeObjects:theObjs mode:MaplyThreadAny];
 }
 
@@ -1066,7 +1066,7 @@ static const float PerfOutputDelay = 15.0;
 
     if (![interactLayer startOfWork])
         return;
-    
+
     [interactLayer disableObjects:theObjs mode:threadMode];
 
     [interactLayer endOfWork];
@@ -1112,7 +1112,7 @@ static const float PerfOutputDelay = 15.0;
         NSLog(@"Must call addActiveObject: on the main thread.");
         return;
     }
-    
+
     if (!activeObjects)
         activeObjects = [NSMutableArray array];
 
@@ -1130,7 +1130,7 @@ static const float PerfOutputDelay = 15.0;
         NSLog(@"Must call removeActiveObject: on the main thread.");
         return;
     }
-    
+
     if ([activeObjects containsObject:theObj])
     {
         scene->removeActiveModel(theObj);
@@ -1162,7 +1162,7 @@ static const float PerfOutputDelay = 15.0;
             [layerThreads addObject:layerThread];
             [layerThread start];
         }
-        
+
         if ([newLayer startLayer:layerThread scene:scene renderer:sceneRenderer viewC:self])
         {
             if (!newLayer.drawPriorityWasSet)
@@ -1173,7 +1173,7 @@ static const float PerfOutputDelay = 15.0;
             return true;
         }
     }
-    
+
     return false;
 }
 
@@ -1191,11 +1191,11 @@ static const float PerfOutputDelay = 15.0;
     }
     if (!found)
         return;
-    
+
     WhirlyKitLayerThread *layerThread = layer.layerThread;
     [layer cleanupLayers:layerThread scene:scene];
     [userLayers removeObject:layer];
-    
+
     // Need to shut down the layer thread too
     if (layerThread != baseLayerThread)
     {
@@ -1225,7 +1225,7 @@ static const float PerfOutputDelay = 15.0;
 - (void)removeAllLayers
 {
     NSArray *allLayers = [NSArray arrayWithArray:userLayers];
-    
+
     for (MaplyViewControllerLayer *theLayer in allLayers)
         [self removeLayer:theLayer];
 }
@@ -1241,7 +1241,7 @@ static const float PerfOutputDelay = 15.0;
 {
     theClearColor = clearColor;
     [sceneRenderer setClearColor:clearColor];
-    
+
     // This is a hack for clear color
     RGBAColor theColor = [clearColor asRGBAColor];
     if (theColor.a < 255)
@@ -1255,7 +1255,7 @@ static const float PerfOutputDelay = 15.0;
 {
     MaplyCoordinate3d displayCoord;
     Point3f pt = visualView.coordAdapter->localToDisplay(visualView.coordAdapter->getCoordSystem()->geographicToLocal(GeoCoord(geoCoord.x,geoCoord.y)));
-    
+
     displayCoord.x = pt.x();    displayCoord.y = pt.y();    displayCoord.z = pt.z();
     return displayCoord;
 }
@@ -1280,10 +1280,10 @@ static const float PerfOutputDelay = 15.0;
 {
     SnapshotTarget *target = [[SnapshotTarget alloc] init];
     sceneRenderer.snapshotDelegate = target;
-    
+
     [sceneRenderer forceDrawNextFrame];
     [sceneRenderer render:0.0];
-    
+
     return target.image;
 }
 
@@ -1299,14 +1299,14 @@ static const float PerfOutputDelay = 15.0;
 {
     // Note: Hack.  Should wrap the real coordinate system
     MaplyCoordinateSystem *coordSys = [[MaplySphericalMercator alloc] initWebStandard];
-    
+
     return coordSys;
 }
 
 - (MaplyCoordinate3d)displayCoordFromLocal:(MaplyCoordinate3d)localCoord
 {
     Point3d pt = visualView.coordAdapter->localToDisplay(Point3d(localCoord.x,localCoord.y,localCoord.z));
-    
+
     MaplyCoordinate3d ret;
     ret.x = pt.x();  ret.y = pt.y();  ret.z = pt.z();
     return ret;
@@ -1316,7 +1316,7 @@ static const float PerfOutputDelay = 15.0;
 {
     Point3d loc3d = CoordSystemConvert3d(coordSys->coordSystem, visualView.coordAdapter->getCoordSystem(), Point3d(localCoord.x,localCoord.y,localCoord.z));
     Point3d pt = visualView.coordAdapter->localToDisplay(loc3d);
-    
+
     MaplyCoordinate3d ret;
     ret.x = pt.x();  ret.y = pt.y();  ret.z = pt.z();
     return ret;

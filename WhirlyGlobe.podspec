@@ -25,7 +25,7 @@ Pod::Spec.new do |s|
   s.platform     = :ios, '7.0'
   s.requires_arc = true
 
-  s.source = { :git => 'https://github.com/mousebird/WhirlyGlobe.git', :tag => 'v2.4_beta1' }
+  s.source = { :git => 'https://github.com/sam899/WhirlyGlobe.git', :branch => 'alliants' }
 
   s.compiler_flags = '-D__USE_SDL_GLES__', '-D__IPHONEOS__'
   s.xcconfig = { "HEADER_SEARCH_PATHS" => "\"${PODS_ROOT}/boost\" \"${PODS_ROOT}/eigen\" \"${PODS_ROOT}/clipper\" \"$(SDKROOT)/usr/include/libxml2\"" }
@@ -96,13 +96,12 @@ Pod::Spec.new do |s|
     mc.source_files = 'WhirlyGlobeSrc/WhirlyGlobe-MaplyComponent/src/*.{mm,m,cpp}'
     mc.dependency 'WhirlyGlobe/glues-wg'
     mc.dependency 'WhirlyGlobe/shapefile'
-    mc.dependency 'WhirlyGlobe/kissxml'
     mc.dependency 'WhirlyGlobe/aaplus'
     mc.dependency 'WhirlyGlobe/octencoding'
     mc.dependency 'WhirlyGlobe/Lib'
     mc.dependency 'WhirlyGlobe/MaplyComponent-Headers'
     mc.dependency 'AFNetworking'
-#    mc.dependency 'KissXML'
+    mc.dependency 'KissXML'
     mc.dependency 'SMCalloutView'
     mc.dependency 'FMDB'
 #    mc.dependency 'GoogleProtobuf', '3.0.0'
